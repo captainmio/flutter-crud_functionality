@@ -16,15 +16,28 @@ class _AddUserState extends State<AddUser> {
   static final GlobalKey<FormFieldState<String>> jobDescriptionKey =
       GlobalKey<FormFieldState<String>>();
 
+  // METHOD = method to go back to the previous page
   void _goBack() {
     Navigator.of(context).pop();
   }
 
+  // METHOD = method to validate each textfield if its null or not
   _fieldValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter some text';
     }
     return null;
+  }
+
+  // METHOD = method to validate and submit the form
+  _formSubmit() {
+    final form = formKey.currentState;
+    if (form!.validate()) {
+      var firstName = firstNameKey.currentState!.value;
+      var lastName = lastNameKey.currentState!.value;
+      var email = jobDescriptionKey.currentState!.value;
+      _goBack();
+    }
   }
 
   @override
@@ -108,10 +121,7 @@ class _AddUserState extends State<AddUser> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
-                    final form = formKey.currentState;
-                    if (form!.validate()) {
-                      _goBack();
-                    }
+                    _formSubmit();
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(50),
