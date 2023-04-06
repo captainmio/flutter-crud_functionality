@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../sql_helper.dart';
+
 class AddUser extends StatefulWidget {
   const AddUser({super.key});
 
@@ -9,12 +11,10 @@ class AddUser extends StatefulWidget {
 
 class _AddUserState extends State<AddUser> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  static final GlobalKey<FormFieldState<String>> firstNameKey =
-      GlobalKey<FormFieldState<String>>();
-  static final GlobalKey<FormFieldState<String>> lastNameKey =
-      GlobalKey<FormFieldState<String>>();
-  static final GlobalKey<FormFieldState<String>> jobDescriptionKey =
-      GlobalKey<FormFieldState<String>>();
+
+  final TextEditingController _firstName = TextEditingController();
+  final TextEditingController _lastName = TextEditingController();
+  final TextEditingController _jobDescription = TextEditingController();
 
   // METHOD = method to go back to the previous page
   void _goBack() {
@@ -30,13 +30,15 @@ class _AddUserState extends State<AddUser> {
   }
 
   // METHOD = method to validate and submit the form
-  _formSubmit() {
+  Future<void> _formSubmit() async {
     final form = formKey.currentState;
     if (form!.validate()) {
-      var firstName = firstNameKey.currentState!.value;
-      var lastName = lastNameKey.currentState!.value;
-      var email = jobDescriptionKey.currentState!.value;
-      _goBack();
+      String firstName = _firstName.text;
+      String lastName = _lastName.text;
+      String jobDescription = _jobDescription.text;
+
+      await SQLHelper.createUser(firstName, lastName, jobDescription)
+          .then((value) => _goBack());
     }
   }
 
@@ -69,7 +71,7 @@ class _AddUserState extends State<AddUser> {
                   vertical: 5.0,
                 ),
                 child: TextFormField(
-                  key: firstNameKey,
+                  controller: _firstName,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'First name',
@@ -85,7 +87,7 @@ class _AddUserState extends State<AddUser> {
                   vertical: 5.0,
                 ),
                 child: TextFormField(
-                  key: lastNameKey,
+                  controller: _lastName,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Last name',
@@ -101,7 +103,7 @@ class _AddUserState extends State<AddUser> {
                   vertical: 5.0,
                 ),
                 child: TextFormField(
-                  key: jobDescriptionKey,
+                  controller: _jobDescription,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Job Description',
