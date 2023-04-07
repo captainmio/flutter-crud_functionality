@@ -10,7 +10,7 @@ class AddEditUser extends StatefulWidget {
 }
 
 class _AddEditUserState extends State<AddEditUser> {
-  late int id;
+  int id = 0;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final TextEditingController _firstName = TextEditingController();
@@ -38,10 +38,12 @@ class _AddEditUserState extends State<AddEditUser> {
       String lastName = _lastName.text;
       String jobDescription = _jobDescription.text;
 
-      if (!id.isNaN) {
+      if (id != 0) {
+        print('Do edit');
         await SQLHelper.updateUser(id, firstName, lastName, jobDescription)
             .then((value) => _goBack());
       } else {
+        print('Do add');
         await SQLHelper.createUser(firstName, lastName, jobDescription)
             .then((value) => _goBack());
       }
