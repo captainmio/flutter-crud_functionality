@@ -39,11 +39,9 @@ class _AddEditUserState extends State<AddEditUser> {
       String jobDescription = _jobDescription.text;
 
       if (id != 0) {
-        print('Do edit');
         await SQLHelper.updateUser(id, firstName, lastName, jobDescription)
             .then((value) => _goBack());
       } else {
-        print('Do add');
         await SQLHelper.createUser(firstName, lastName, jobDescription)
             .then((value) => _goBack());
       }
