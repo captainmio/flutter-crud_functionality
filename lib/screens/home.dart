@@ -35,18 +35,29 @@ class _HomeState extends State<Home> {
           return ListTile(
             title: Text(
                 "${users[index]['first_name']} ${users[index]['last_name']}"),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.pushNamed(context, "details")
-                  .then((value) => _getUsers());
-            },
+            subtitle: Text("${users[index]['job_description']}"),
+            trailing: Wrap(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () => Navigator.pushNamed(context, "addEditUser",
+                          arguments: {'id': users[index]['id']})
+                      .then((value) => _getUsers()),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => print('Delete'),
+                )
+              ],
+            ),
           );
         }),
         itemCount: users.length,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, "addUser").then((value) => _getUsers());
+          Navigator.pushNamed(context, "addEditUser")
+              .then((value) => _getUsers());
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),

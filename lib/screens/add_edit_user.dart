@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../sql_helper.dart';
 
-class AddUser extends StatefulWidget {
-  const AddUser({super.key});
+class AddEditUser extends StatefulWidget {
+  const AddEditUser({super.key});
 
   @override
-  State<AddUser> createState() => _AddUserState();
+  State<AddEditUser> createState() => _AddEditUserState();
 }
 
-class _AddUserState extends State<AddUser> {
+class _AddEditUserState extends State<AddEditUser> {
+  late int id;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final TextEditingController _firstName = TextEditingController();
@@ -37,16 +38,43 @@ class _AddUserState extends State<AddUser> {
       String lastName = _lastName.text;
       String jobDescription = _jobDescription.text;
 
-      await SQLHelper.createUser(firstName, lastName, jobDescription)
-          .then((value) => _goBack());
+      if (!id.isNaN) {
+        await SQLHelper.updateUser(id, firstName, lastName, jobDescription)
+            .then((value) => _goBack());
+      } else {
+        await SQLHelper.createUser(firstName, lastName, jobDescription)
+            .then((value) => _goBack());
+      }
     }
+  }
+
+  Future<void> _getUser() async {
+    List<Map<String, dynamic>> user = await SQLHelper.getUser(id);
+
+    _firstName.text = user[0]['first_name'];
+    _lastName.text = user[0]['last_name'];
+    _jobDescription.text = user[0]['job_description'];
   }
 
   @override
   Widget build(BuildContext context) {
+    // final ModalRouteVar = ModalRoute.of(context);
+    final Map<String, dynamic>? arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+
+    String appBarTitle = "Add a new User";
+
+    if (arguments != null && arguments['id'] != null) {
+      appBarTitle = "Edit a user";
+      setState(() {
+        id = arguments['id'];
+      });
+      _getUser();
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add a new User"),
+        title: Text(appBarTitle),
         leading: GestureDetector(
           child: const Icon(
             Icons.arrow_back_ios,

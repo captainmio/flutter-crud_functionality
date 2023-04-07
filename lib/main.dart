@@ -1,5 +1,4 @@
-import 'package:crud_functionality/screens/add_user.dart';
-import 'package:crud_functionality/screens/details.dart';
+import 'package:crud_functionality/screens/add_edit_user.dart';
 import 'package:crud_functionality/screens/home.dart';
 import 'package:flutter/material.dart';
 
@@ -26,8 +25,7 @@ class _MyAppState extends State<MyApp> {
       home: const Home(),
       routes: {
         "home": (context) => const Home(),
-        "details": (context) => const Details(),
-        "addUser": (context) => const AddUser()
+        "addEditUser": (context) => const AddEditUser()
       },
     );
   }
